@@ -4,8 +4,10 @@
 
 2016.05.13
 
-    新增:
+    修证:
         1、修证 Ubuntu 下无法使用 VIM 的 BUG；
+
+    替换:
         2、更换 Gorilla 的 Websocket 库。
 
 2016.03.05
