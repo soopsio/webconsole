@@ -3,9 +3,9 @@ package website
 import (
 	"apibox.club/utils"
 	"bytes"
+	"encoding/json"
+	"github.com/gorilla/websocket"
 	gossh "golang.org/x/crypto/ssh"
-	"golang.org/x/net/websocket"
-	"io"
 	"net"
 	"net/http"
 	"net/url"
@@ -34,23 +34,22 @@ func (s *ssh) Connect() (*ssh, error) {
 		return nil, err
 	}
 	s.client = client
-	session, err := client.NewSession()
-	if nil != err {
-		return nil, err
-	}
-	s.session = session
 	return s, nil
 }
 
 func (s *ssh) Exec(cmd string) (string, error) {
 	var buf bytes.Buffer
-	s.session.Stdout = &buf
-	s.session.Stderr = &buf
-	err = s.session.Run(cmd)
+	session, err := s.client.NewSession()
+	if nil != err {
+		return "", err
+	}
+	session.Stdout = &buf
+	session.Stderr = &buf
+	err = session.Run(cmd)
 	if err != nil {
 		return "", err
 	}
-	defer s.session.Close()
+	defer session.Close()
 	stdout := buf.String()
 	apibox.Log_Debug("Stdout:", stdout)
 	return stdout, nil
@@ -84,8 +83,31 @@ func chkSSHSrvAddr(ssh_addr, key string) (string, string, error) {
 	return addr.String(), en_addr, nil
 }
 
-func SSHWebSocketHandler(ws *websocket.Conn) {
-	ctx := NewContext(nil, ws.Request())
+var upgrader = websocket.Upgrader{
+	ReadBufferSize:  1024,
+	WriteBufferSize: 1024,
+}
+
+type ptyRequestMsg struct {
+	Term     string
+	Columns  uint32
+	Rows     uint32
+	Width    uint32
+	Height   uint32
+	Modelist string
+}
+
+type jsonMsg struct {
+	Data string `json:"data"`
+}
+
+func SSHWebSocketHandler(w http.ResponseWriter, r *http.Request) {
+	ctx := NewContext(w, r)
+	ws, err := upgrader.Upgrade(w, r, nil)
+	if nil != err {
+		apibox.Log_Err("Upgrade WebScoket Error:", err)
+		return
+	}
 
 	vm_info := ctx.GetFormValue("vm_info")
 	cols := ctx.GetFormValue("cols")
@@ -117,12 +139,12 @@ func SSHWebSocketHandler(ws *websocket.Conn) {
 				return
 			}
 
-			ptyCols, err := apibox.StringUtils(cols).Int()
+			ptyCols, err := apibox.StringUtils(cols).Uint32()
 			if nil != err {
 				apibox.Log_Err(err)
 				return
 			}
-			ptyRows, err := apibox.StringUtils(rows).Int()
+			ptyRows, err := apibox.StringUtils(rows).Uint32()
 			if nil != err {
 				apibox.Log_Err(err)
 				return
@@ -130,53 +152,101 @@ func SSHWebSocketHandler(ws *websocket.Conn) {
 
 			session := sh.session
 			defer session.Close()
+
+			channel, incomingRequests, err := sh.client.Conn.OpenChannel("session", nil)
+			if err != nil {
+				apibox.Log_Err(err)
+				return
+			}
+			go func() {
+				for req := range incomingRequests {
+					if req.WantReply {
+						req.Reply(false, nil)
+					}
+				}
+			}()
 			modes := gossh.TerminalModes{
 				gossh.ECHO:          1,
 				gossh.TTY_OP_ISPEED: 14400,
 				gossh.TTY_OP_OSPEED: 14400,
 			}
-
-			if err = session.RequestPty("xterm-256color", ptyRows, ptyCols, modes); err != nil {
+			var modeList []byte
+			for k, v := range modes {
+				kv := struct {
+					Key byte
+					Val uint32
+				}{k, v}
+				modeList = append(modeList, gossh.Marshal(&kv)...)
+			}
+			modeList = append(modeList, 0)
+			req := ptyRequestMsg{
+				Term:     "xterm",
+				Columns:  ptyCols,
+				Rows:     ptyRows,
+				Width:    ptyCols * 8,
+				Height:   ptyRows * 8,
+				Modelist: string(modeList),
+			}
+			ok, err := channel.SendRequest("pty-req", true, gossh.Marshal(&req))
+			if !ok || err != nil {
+				apibox.Log_Err(err)
+				return
+			}
+			ok, err = channel.SendRequest("shell", true, nil)
+			if !ok || err != nil {
 				apibox.Log_Err(err)
 				return
 			}
 
-			w, err := session.StdinPipe()
-			if nil != err {
-				apibox.Log_Err(err)
-				return
-			}
+			done := make(chan bool, 2)
 			go func() {
-				io.Copy(w, ws)
+				defer func() {
+					done <- true
+				}()
+				for {
+					messageType, p, err := ws.ReadMessage()
+					if err != nil {
+						apibox.Log_Err(err)
+						return
+					}
+					if messageType == websocket.TextMessage {
+						jsonMsgStruct := new(jsonMsg)
+						json.Unmarshal(p, jsonMsgStruct)
+						if jsonMsgStruct.Data != "" {
+							_, err := channel.Write([]byte(jsonMsgStruct.Data))
+							if err != nil {
+								return
+							}
+						}
+					}
+				}
 			}()
-
-			r, err := session.StdoutPipe()
-			if nil != err {
-				apibox.Log_Err(err)
-				return
-			}
 			go func() {
-				io.Copy(ws, r)
+				defer func() {
+					done <- true
+				}()
+				rbuf := make([]byte, 1024)
+				for {
+					n, err := channel.Read(rbuf)
+					if err != nil {
+						apibox.Log_Err(err)
+						return
+					}
+
+					if n > 0 {
+						msg := &jsonMsg{
+							Data: string(rbuf[:n]),
+						}
+						msgJson, err := json.Marshal(msg)
+						err = ws.WriteMessage(websocket.TextMessage, msgJson)
+						if err != nil {
+							apibox.Log_Err(err)
+							return
+						}
+					}
+				}
 			}()
-
-			er, err := session.StderrPipe()
-			if nil != err {
-				apibox.Log_Err(err)
-				return
-			}
-			go func() {
-				io.Copy(ws, er)
-			}()
-
-			if err := session.Shell(); nil != err {
-				apibox.Log_Err(err)
-				return
-			}
-
-			if err := session.Wait(); nil != err {
-				apibox.Log_Err(err)
-				return
-			}
+			<-done
 		} else {
 			apibox.Log_Err("Unable to parse the data.")
 			return
@@ -357,5 +427,5 @@ func init() {
 	Add_HandleFunc("post", "/console/login", console.ConsoleLogin)
 	Add_HandleFunc("get,post", "/console/logout", console.ConsoleLogout)
 	Add_HandleFunc("get,post", "/console/main/:vm_info", console.ConsoleMainPage)
-	Add_Handle("get", "/console/sshws/:vm_info", websocket.Handler(SSHWebSocketHandler))
+	Add_HandleFunc("get,post", "/console/sshws/:vm_info", SSHWebSocketHandler)
 }

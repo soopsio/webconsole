@@ -53,7 +53,7 @@
                         if (typeof(data) != "object") {
                             json = $.parseJSON(data);
                         }
-                        if(json.ok){
+                        if (json.ok) {
                             dst_vmaddr.val(json.data.en_addr);
                         }
                     });
@@ -123,12 +123,13 @@
             var wsaddr, $console = this;
             wsaddr = options.wsaddr === undefined ? "ws://127.0.0.1:8080/console" : options.wsaddr;
 
-            var resizeTerminal = function() {
+            var resizeTerminal = function(t, c, r) {
                 var appbar_height = $("#c-appbar").height();
                 var body_height = $(window).height();
                 var body_width = $(window).width();
                 var terminal_height = body_height - appbar_height - 10;
                 $(".terminal").height(terminal_height);
+                t.resize(c, r);
             };
 
             var getSize = function() {
@@ -170,10 +171,10 @@
             var rows = getSize().rows;
             var term = null;
             var socket = new WebSocket(wsaddr + "?cols=" + cols + "&rows=" + rows);
-            
+
             socket.onopen = function() {
                 term = new Terminal({
-                    termName: "xterm-256color",
+                    termName: "xterm",
                     cols: cols,
                     rows: rows,
                     useStyle: true,
@@ -184,21 +185,30 @@
                     colors: Terminal.xtermColors
                 });
                 term.open($console.get(0));
-                resizeTerminal();
+
+                resizeTerminal(term, cols, rows);
+
+                $(window).resize(function() {
+                    resizeTerminal(term, cols, rows);
+                });
+
                 term.on("title", function(title) {
                     $(document).prop("title", title);
                 });
                 term.on("data", function(data) {
                     var md = data;
-                    console.log("send: " + md);
                     if (md.length !== 0) {
-                        socket.send(md);
+                        socket.send(JSON.stringify({ "data": md }));
                     }
                 });
                 socket.onmessage = function(e) {
                     var md = e.data;
-                    console.log("message: " + md);
-                    term.write(md);
+                    var data = JSON.parse(md.toString());
+                    if (data.error !== undefined) {
+                        socket.onerror(data.error);
+                    } else {
+                        term.write(data.data);
+                    }
                 };
 
                 window.term = term;
@@ -222,10 +232,6 @@
             socket.onerror = function(e) {
                 console.log("Socket error:", e);
             };
-
-            $(window).resize(function() {
-                resizeTerminal();
-            });
         };
 
         $.fn.loading = function(options) {

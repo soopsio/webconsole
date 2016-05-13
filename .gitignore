@@ -18,5 +18,6 @@ _testmain.go
 .DS_Store?
 .Trashes
 .svn
+*.bak
 *.[568vq]
 [568vq].out
