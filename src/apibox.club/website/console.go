@@ -87,16 +87,12 @@ var upgrader = websocket.Upgrader{
 	ReadBufferSize:  1024,
 	WriteBufferSize: 1024,
 	CheckOrigin: func(r *http.Request) bool {
-
 		// 跨域处理，这里需要做一下安全防护。比如：请求白名单(这里只是简单的做了请求HOST白名单)
-		cors := Conf.Web.EnableCORS
-		if cors {
-			cwl := Conf.Web.CorsWhiteList
-			apibox.Log_Debug("Cors white list:", cwl)
-			for _, v := range strings.Split(cwl, ",") {
-				if strings.EqualFold(strings.TrimSpace(v), r.Host) {
-					return true
-				}
+		cwl := Conf.Web.CorsWhiteList
+		apibox.Log_Debug("Cors white list:", cwl)
+		for _, v := range strings.Split(cwl, ",") {
+			if strings.EqualFold(strings.TrimSpace(v), r.Host) {
+				return true
 			}
 		}
 		return false
