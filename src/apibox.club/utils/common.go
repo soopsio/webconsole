@@ -52,7 +52,6 @@ type (
 		TemplateDir    string `json:"template_dir" xml:"template_dir"`
 		TemplateSuffix string `json:"template_suffix" xml:"template_suffix"`
 		EnableTLS      bool   `json:"enable_tls" xml:"enable_tls"`
-		EnableCORS     bool   `json:"enable_cors" xml:"enable_cors"`
 		CorsWhiteList  string `json:"cors_white_list" xml:"cors_white_list"`
 		EnableFcgi     bool   `json:"enable_fcgi" xml:"enable_fcgi"`
 		TlsCert        string `json:"tls_cert,omitempty" xml:"tls_cert,omitempty"`
