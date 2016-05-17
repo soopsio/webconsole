@@ -11,8 +11,8 @@
 2016.05.17
 
     新增:
-        1、跨域请求的支持。(conf/conf.json.  enable_cors:true/false);
-        2、启用跨域支持后，添加跨域白名单的支持。(conf/conf.json. cors_white_list:"127.0.0.1,www.xxx.com");
+        1、跨域请求的支持。(conf/conf.json    enable_cors:true/false);
+        2、启用跨域支持后，添加跨域白名单的支持。(conf/conf.json     cors_white_list:"127.0.0.1,www.xxx.com");
 
     感谢 @玩蝴蝶的法师 提出的功能建议。
 
