@@ -1,4 +1,4 @@
-#!/usr/bin/env sh
+#!/usr/bin/env bash
 #
 # Auth:Eric Shi
 # Email:shibingli@yeah.net
@@ -8,7 +8,7 @@
 DIRNAME=$(cd "$(dirname "$0")"; pwd)
 
 which go > /dev/null 2>&1
-if [ $? == 0 ]; then
+if [[ $? -eq 0 ]]; then
     echo ""
     echo "==> Golang is already installed."
 else
@@ -16,13 +16,12 @@ else
     echo ""
     curl -L "https://storage.googleapis.com/golang/go1.6.2.linux-amd64.tar.gz" | tar -zx -C /usr/local
     echo ""
-    PATH=/usr/local/go/bin:$PATH
-    export $PATH
+    export PATH=/usr/local/go/bin:$PATH
 fi
 
 which go > /dev/null 2>&1
-if [ $? == 0 ]; then
-    GOPATH=$DIRNAME
+if [[ $? -eq 0 ]]; then
+    export GOPATH=$DIRNAME
     cd $GOPATH/src/apibox.club/apibox/ && go install
     echo ""
     echo "==> Please run the $GOPATH/bin/apibox."
