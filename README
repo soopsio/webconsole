@@ -71,7 +71,7 @@ Github:  https://github.com/shibingli/webconsole
 
 运行环境要求：
 
-1、Intel 架构
+1、x86 架构
 2、Linux Kernel 3.x/x86_64 及更高版本
 3、建议 Linux 发行版 CentOS 7.x
 4、启用支持 SSL/TLS 模式访问时，需要生成对应的 SSL 证书文件且放置到 "conf" 文件夹下并配置 "conf.json" 文件
