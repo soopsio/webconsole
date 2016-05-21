@@ -2,7 +2,7 @@
     "web": {
         "addr": ":8080",
         "tls_addr": ":8443",
-        "tls_url": "https://www.apibox.club:8443",
+        "tls_url": "https://www.pangu.cloud:8443",
         "static_dir": "static",
         "template_dir": "template/default",
         "template_suffix": ".html",
