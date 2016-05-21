@@ -215,13 +215,15 @@ func SSHWebSocketHandler(w http.ResponseWriter, r *http.Request) {
 				defer func() {
 					done <- true
 				}()
+
 				for {
-					messageType, p, err := ws.ReadMessage()
+					m, p, err := ws.ReadMessage()
 					if err != nil {
 						apibox.Log_Warn(err.Error())
 						return
 					}
-					if messageType == websocket.TextMessage {
+
+					if m == websocket.TextMessage {
 						jsonMsgStruct := new(jsonMsg)
 						json.Unmarshal(p, jsonMsgStruct)
 						if jsonMsgStruct.Data != "" {
