@@ -122,6 +122,7 @@ func SSHWebSocketHandler(w http.ResponseWriter, r *http.Request) {
 		apibox.Log_Err("Upgrade WebScoket Error:", err)
 		return
 	}
+	defer ws.Close()
 
 	vm_info := ctx.GetFormValue("vm_info")
 	cols := ctx.GetFormValue("cols")
