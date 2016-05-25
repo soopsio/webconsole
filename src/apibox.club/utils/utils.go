@@ -79,7 +79,20 @@ func Format_Date(time time.Time, format string) string {
 	return time.Format(format)
 }
 
+func MkdirByFile(file string) error {
+	fileDir := filepath.Dir(file)
+	if !IsDir(fileDir) {
+		if err := os.Mkdir(fileDir, os.ModePerm); nil != err {
+			return err
+		}
+	}
+	return nil
+}
+
 func WritePidFile(file, pid string) error {
+	if err := MkdirByFile(file); nil != err {
+		return err
+	}
 	pidfile, err := os.OpenFile(file, os.O_WRONLY|os.O_TRUNC|os.O_CREATE, os.ModePerm)
 	if err != nil {
 		return err
@@ -417,9 +430,25 @@ func GetCharset(charset string) encoding.Encoding {
 	}
 }
 
-func Exist(filename string) bool {
-	_, err := os.Stat(filename)
-	return err == nil || os.IsExist(err)
+func Exists(p string) bool {
+	_, err := os.Stat(p)
+	if err == nil {
+		return true
+	}
+	if os.IsNotExist(err) {
+		return false
+	}
+	return true
+}
+
+func IsDir(p string) bool {
+	fi, err := os.Stat(p)
+	if err != nil {
+		return false
+	} else {
+		return fi.IsDir()
+	}
+	return false
 }
 
 func Get_File_Size(fileSize int64) string {

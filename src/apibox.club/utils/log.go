@@ -45,7 +45,13 @@ var (
 )
 
 func init() {
-	logfile, err := os.OpenFile(LogDir+PathSeparator+getLogDay(time.Now())+Log_file_suffix, os.O_WRONLY|os.O_CREATE|os.O_APPEND, 0666)
+	logFile := LogDir + PathSeparator + getLogDay(time.Now()) + Log_file_suffix
+
+	if err := MkdirByFile(logFile); nil != err {
+		Log_Fatal(err)
+	}
+
+	logfile, err := os.OpenFile(logFile, os.O_WRONLY|os.O_CREATE|os.O_APPEND, 0666)
 	if err != nil {
 		Log_Fatal(err)
 	}

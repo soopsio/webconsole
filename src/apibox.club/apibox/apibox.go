@@ -39,45 +39,58 @@ func (a *Apibox) GetPID() (*Apibox, error) {
 
 func (a *Apibox) Start() error {
 	time.Sleep(time.Duration(1 * time.Second))
-	_, err := a.GetPID()
-	if nil != err {
-		return err
-	}
-	if err := syscall.Kill(a.PID, 0); nil != err {
-		apibox.Set_log_level(apibox.LevelDebug)
-		website.Run()
+	if apibox.Exists(apibox.PidPath) {
+		_, err := a.GetPID()
+		if nil != err {
+			return err
+		}
+		if err := syscall.Kill(a.PID, 0); nil != err {
+			apibox.Set_log_level(apibox.LevelDebug)
+			website.Run()
+		} else {
+			fmt.Fprintf(os.Stderr, "The program is running, turn off the start again.\n")
+		}
 	} else {
-		fmt.Fprintf(os.Stderr, "The program is running, turn off the start again.\n")
+		website.Run()
 	}
 	return nil
 }
 
 func (a *Apibox) Stop() error {
 	time.Sleep(time.Duration(1 * time.Second))
-	_, err := a.GetPID()
-	if nil != err {
-		return err
-	}
-	p, err := os.FindProcess(a.PID)
-	if nil != err {
-		return err
-	}
-	err = p.Kill()
-	if nil != err {
-		return err
+	if apibox.Exists(apibox.PidPath) {
+		_, err := a.GetPID()
+		if nil != err {
+			return err
+		}
+		p, err := os.FindProcess(a.PID)
+		if nil != err {
+			return err
+		}
+		err = p.Kill()
+		if nil != err {
+			return err
+		}
+	} else {
+		return fmt.Errorf("Unable to read the PID file.")
 	}
 	return nil
 }
 
 func (a *Apibox) Status() (bool, error) {
-	_, err := a.GetPID()
-	if nil != err {
-		return false, err
-	}
-	if err := syscall.Kill(a.PID, 0); nil != err {
-		return false, nil
+	if apibox.Exists(apibox.PidPath) {
+		_, err := a.GetPID()
+		if nil != err {
+			return false, err
+		}
+		if err := syscall.Kill(a.PID, 0); nil != err {
+			return false, nil
+		} else {
+			return true, nil
+		}
+
 	} else {
-		return true, nil
+		return false, fmt.Errorf("Unable to read the PID file.")
 	}
 }
 
