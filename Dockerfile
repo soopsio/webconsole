@@ -15,7 +15,7 @@ ENV PATH /usr/local/go/bin:$PATH
 
 ADD . /data/apibox
 ENV GOPATH /data/apibox/
-RUN cd /data/apibox/ && git submodule update --init --recursive && cd /data/apibox/src/apibox.club/apibox/ && go install && sed -i "/exit 0/i /data/apibox/bin/apibox start" /etc/rc.local
+RUN cd /data/apibox/src/apibox.club/apibox/ && go install && sed -i "/exit 0/i /data/apibox/bin/apibox start" /etc/rc.local
 
 EXPOSE 8080
 
