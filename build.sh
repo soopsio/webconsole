@@ -22,6 +22,7 @@ fi
 which go > /dev/null 2>&1
 if [[ $? -eq 0 ]]; then
     export GOPATH=$DIRNAME
+    git submodule update --init --recursive
     cd $GOPATH/src/apibox.club/apibox/ && go install
     echo ""
     echo "==> Please run the $GOPATH/bin/apibox."
