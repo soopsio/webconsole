@@ -12,9 +12,9 @@ if [[ $? -eq 0 ]]; then
     echo ""
     echo "==> Golang is already installed."
 else
-    echo "==> Download Golang."
+    echo "==> Install Golang."
     echo ""
-    curl -L "https://storage.googleapis.com/golang/go1.6.2.linux-amd64.tar.gz" | tar -zx -C /usr/local
+    tar -zxvf $DIRNAME/go1.7.3.linux-amd64.tar.gz -C /usr/local
     echo ""
     export PATH=/usr/local/go/bin:$PATH
 fi
