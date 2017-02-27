@@ -59,6 +59,11 @@ func (s *ssh) Exec(cmd string) (string, error) {
 }
 
 func chkSSHSrvAddr(ssh_addr, key string) (string, string, error) {
+
+	if strings.Index(ssh_addr, "//") <= 0 {
+		ssh_addr = "//" + ssh_addr
+	}
+
 	u, err := url.Parse(ssh_addr)
 	if nil != err {
 		return "", "", err
