@@ -14,7 +14,7 @@ if [[ $? -eq 0 ]]; then
 else
     echo "==> Install Golang."
     echo ""
-    tar -zxvf $DIRNAME/go1.7.3.linux-amd64.tar.gz -C /usr/local
+    tar -zxvf $DIRNAME/go1.8.linux-amd64.tar.gz -C /usr/local
     echo ""
     export PATH=/usr/local/go/bin:$PATH
 fi
