@@ -139,10 +139,9 @@
                     var lh = span.css("line-height");
                     lh = lh.substr(0, lh.length - 2);
                     var size = {
-                        width: span.width() / 26,
-                        height: span.height() - (lh / 2)
+                        width: span.width() / 22,
+                        height: span.height() - (lh / 2.8)
                     };
-
                     span.remove();
                     return size;
                 }
@@ -184,7 +183,12 @@
                     visualBell: true,
                     colors: Terminal.xtermColors
                 });
+
+                term.attach(socket);
+                term._initialized = true;
+
                 term.open($console.get(0));
+                term.fit();
 
                 resizeTerminal(term, cols, rows);
 
@@ -195,21 +199,22 @@
                 term.on("title", function(title) {
                     $(document).prop("title", title);
                 });
-                term.on("data", function(data) {
-                    var md = data;
-                    if (md.length !== 0) {
-                        socket.send(JSON.stringify({ "data": md }));
-                    }
-                });
-                socket.onmessage = function(e) {
-                    var md = e.data;
-                    var data = JSON.parse(md.toString());
-                    if (data.error !== undefined) {
-                        socket.onerror(data.error);
-                    } else {
-                        term.write(data.data);
-                    }
-                };
+
+                // term.on("data", function(data) {
+                //     var md = data;
+                //     if (md.length !== 0) {
+                //         socket.send(JSON.stringify({ "data": md }));
+                //     }
+                // });
+                // socket.onmessage = function(e) {
+                //     var md = e.data;
+                //     var data = JSON.parse(md.toString());
+                //     if (data.error !== undefined) {
+                //         socket.onerror(data.error);
+                //     } else {
+                //         term.write(data.data);
+                //     }
+                // };
 
                 window.term = term;
                 window.socket = socket;
@@ -256,5 +261,4 @@
                 "left": "45%"
             });
         };
-    })
-);
+    }));

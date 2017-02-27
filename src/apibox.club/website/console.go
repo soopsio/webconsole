@@ -2,7 +2,6 @@ package website
 
 import (
 	"bytes"
-	"encoding/json"
 	"io"
 	"net"
 	"net/http"
@@ -231,14 +230,17 @@ func SSHWebSocketHandler(w http.ResponseWriter, r *http.Request) {
 					}
 
 					if m == websocket.TextMessage {
-						jsonMsgStruct := new(jsonMsg)
-						json.Unmarshal(p, jsonMsgStruct)
-						if jsonMsgStruct.Data != "" {
-							_, err := channel.Write([]byte(jsonMsgStruct.Data))
-							if err != nil {
-								return
-							}
+						if _, err := channel.Write(p); nil != err {
+							return
 						}
+						// jsonMsgStruct := new(jsonMsg)
+						// json.Unmarshal(p, jsonMsgStruct)
+						// if jsonMsgStruct.Data != "" {
+						//  _, err := channel.Write([]byte(jsonMsgStruct.Data))
+						// 	if err != nil {
+						// 		return
+						// 	}
+						// }
 					}
 				}
 			}()
@@ -260,11 +262,12 @@ func SSHWebSocketHandler(w http.ResponseWriter, r *http.Request) {
 					}
 
 					if n > 0 {
-						msg := &jsonMsg{
-							Data: string(rbuf[:n]),
-						}
-						msgJson, err := json.Marshal(msg)
-						err = ws.WriteMessage(websocket.TextMessage, msgJson)
+						// msg := &jsonMsg{
+						// 	Data: string(rbuf[:n]),
+						// }
+						// msgJson, err := json.Marshal(msg)
+						// err = ws.WriteMessage(websocket.TextMessage, msgJson)
+						err = ws.WriteMessage(websocket.TextMessage, rbuf[:n])
 						if err != nil {
 							apibox.Log_Err(err)
 							return
