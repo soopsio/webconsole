@@ -6,7 +6,6 @@ import (
 	"net"
 	"net/http"
 	"net/url"
-	"os"
 	"strings"
 
 	"apibox.club/utils"
@@ -198,7 +197,7 @@ func SSHWebSocketHandler(w http.ResponseWriter, r *http.Request) {
 			}
 			modeList = append(modeList, 0)
 			req := ptyRequestMsg{
-				Term:     os.Getenv("TERM"),
+				Term:     "xterm",
 				Columns:  ptyCols,
 				Rows:     ptyRows,
 				Width:    ptyCols * 8,
