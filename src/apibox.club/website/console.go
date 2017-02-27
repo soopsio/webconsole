@@ -1,16 +1,18 @@
 package website
 
 import (
-	"apibox.club/utils"
 	"bytes"
 	"encoding/json"
-	"github.com/gorilla/websocket"
-	gossh "golang.org/x/crypto/ssh"
 	"io"
 	"net"
 	"net/http"
 	"net/url"
+	"os"
 	"strings"
+
+	"apibox.club/utils"
+	"github.com/gorilla/websocket"
+	gossh "golang.org/x/crypto/ssh"
 )
 
 var (
@@ -192,7 +194,7 @@ func SSHWebSocketHandler(w http.ResponseWriter, r *http.Request) {
 			}
 			modeList = append(modeList, 0)
 			req := ptyRequestMsg{
-				Term:     "xterm",
+				Term:     os.Getenv("TERM"),
 				Columns:  ptyCols,
 				Rows:     ptyRows,
 				Width:    ptyCols * 8,
