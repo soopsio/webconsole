@@ -1,8 +1,6 @@
 package main
 
 import (
-	"apibox.club/utils"
-	"apibox.club/website"
 	"bytes"
 	"flag"
 	"fmt"
@@ -11,6 +9,9 @@ import (
 	"strings"
 	"syscall"
 	"time"
+
+	"apibox.club/utils"
+	"apibox.club/website"
 )
 
 const (
@@ -38,21 +39,7 @@ func (a *Apibox) GetPID() (*Apibox, error) {
 }
 
 func (a *Apibox) Start() error {
-	time.Sleep(time.Duration(1 * time.Second))
-	if apibox.Exists(apibox.PidPath) {
-		_, err := a.GetPID()
-		if nil != err {
-			return err
-		}
-		if err := syscall.Kill(a.PID, 0); nil != err {
-			apibox.Set_log_level(apibox.LevelDebug)
-			website.Run()
-		} else {
-			fmt.Fprintf(os.Stderr, "The program is running, turn off the start again.\n")
-		}
-	} else {
-		website.Run()
-	}
+	website.Run()
 	return nil
 }
 
