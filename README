@@ -25,7 +25,8 @@
         1、修改部分BUG
         2、更新 term.js
         3、更新 Golang 到 1.8 版本
-        4、修证 Golang 1.8 版本中 url.Parse 解析地址 BUG。
+        4、修证 Golang 1.8 版本中 url.Parse 解析地址 BUG
+        5、替换 term.js 为 xterm.js,增加xterm的特性
 
 2016.05.25
 
