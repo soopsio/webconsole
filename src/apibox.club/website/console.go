@@ -232,14 +232,6 @@ func SSHWebSocketHandler(w http.ResponseWriter, r *http.Request) {
 						if _, err := channel.Write(p); nil != err {
 							return
 						}
-						// jsonMsgStruct := new(jsonMsg)
-						// json.Unmarshal(p, jsonMsgStruct)
-						// if jsonMsgStruct.Data != "" {
-						//  _, err := channel.Write([]byte(jsonMsgStruct.Data))
-						// 	if err != nil {
-						// 		return
-						// 	}
-						// }
 					}
 				}
 			}()
