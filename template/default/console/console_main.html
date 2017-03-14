@@ -110,8 +110,9 @@
 <script src="/static/scripts/console.min.js" type="text/javascript"></script>
 <script type="text/javascript">
     $(function() {
+        var protocol = (location.protocol === "https:") ? "wss://" : "ws://";
         $("#console_div").OpenTerminal({
-            "wsaddr": "<abc% .WS_Addr %>"
+            "wsaddr": protocol+"<abc% .WS_Addr %>"
         });
     });
 </script>
