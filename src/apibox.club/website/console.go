@@ -334,12 +334,7 @@ func (c *Console) ConsoleMainPage(w http.ResponseWriter, r *http.Request) {
 				UserPwd:  user_pwd,
 				VM_Addr:  vm_addr,
 			}
-
-			wsScheme := "ws://"
-			if Conf.Web.EnableTLS {
-				wsScheme = "wss://"
-			}
-			wsAddr := wsScheme + r.Host + "/console/sshws/" + vm_info
+			wsAddr := r.Host + "/console/sshws/" + vm_info
 			apibox.Log_Debug("WS Addr:", wsAddr)
 			cmpd.WS_Addr = wsAddr
 			ctx.OutHtml("console/console_main", cmpd)

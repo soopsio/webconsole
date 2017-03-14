@@ -121,7 +121,8 @@
                 options = {};
             }
             var wsaddr, $console = this;
-            wsaddr = options.wsaddr === undefined ? "ws://127.0.0.1:8080/console" : options.wsaddr;
+            var protocol = (location.protocol === "https:") ? "wss://" : "ws://";
+            wsaddr = options.wsaddr === undefined ? protocol+"127.0.0.1:8080/console" : protocol+options.wsaddr;
 
             var resizeTerminal = function(t, c, r) {
                 var appbar_height = $("#c-appbar").height();
