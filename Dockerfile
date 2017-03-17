@@ -18,6 +18,5 @@ ENV GOPATH /data/apibox/
 RUN cd /data/apibox/src/apibox.club/apibox/ && go install && sed -i "/exit 0/i /data/apibox/bin/apibox start" /etc/rc.local
 
 EXPOSE 8080
-EXPOSE 8443
 
 CMD /data/apibox/bin/apibox start
