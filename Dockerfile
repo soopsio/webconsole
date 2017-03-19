@@ -1,4 +1,4 @@
-FROM ubuntu:16.04
+FROM shibingli/ubuntu:16.04
 
 MAINTAINER Eric Shi <postmaster@apibox.club>
 
