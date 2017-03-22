@@ -1,4 +1,4 @@
-FROM shibingli/ubuntu:16.04
+FROM alpine:latest
 
 MAINTAINER Eric Shi <postmaster@apibox.club>
 
@@ -6,7 +6,7 @@ ENV LANGUAGE en_US.UTF-8
 ENV LANG en_US.UTF-8
 ENV LC_ALL en_US.UTF-8
 
-RUN apt-get -y update && apt-get -y upgrade && apt-get -y install curl git 
+RUN apk add --no-cache curl git tar
 
 
 RUN mkdir -p /data/tools && mkdir -p /data/apibox
