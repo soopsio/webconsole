@@ -9,7 +9,7 @@ RUN curl -L 'https://storage.googleapis.com/golang/go1.8.linux-amd64.tar.gz' | t
 ENV PATH /usr/local/go/bin/:$PATH
 ENV GOPATH /data/apibox/
 ADD . /data/apibox/
-RUN cd /data/apibox/src/apibox.club/apibox/ && go install
+RUN cd /data/apibox/src/apibox.club/apibox/ && GOPATH='/data/apibox/' PATH='/usr/local/go/bin:$PATH' go install
 EXPOSE 8080
 
 CMD ["/data/apibox/bin/apibox","start"]
