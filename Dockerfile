@@ -6,7 +6,7 @@ MAINTAINER Eric Shi <postmaster@apibox.club>
 # ENV LANG en_US.UTF-8
 # ENV LC_ALL en_US.UTF-8
 
-RUN apk add --no-cache curl git tar
+RUN apk add --no-cache curl
 
 RUN mkdir -p /data/tools && mkdir -p /data/apibox
 RUN cd /data/tools && curl -L 'https://storage.googleapis.com/golang/go1.8.linux-amd64.tar.gz' | tar -zx -C /usr/local
