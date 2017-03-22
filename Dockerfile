@@ -1,15 +1,10 @@
-FROM alpine:latest
+FROM golang:1.8.0-alpine
 
 MAINTAINER Eric Shi <postmaster@apibox.club>
 
-RUN apk --update --no-cache add curl
+ADD . /go/
+RUN  go install -v
 
-RUN mkdir -p /data/apibox
-RUN curl -L 'https://storage.googleapis.com/golang/go1.8.linux-amd64.tar.gz' | tar -zx -C /usr/local
-ENV PATH /usr/local/go/bin/:$PATH
-ENV GOPATH /data/apibox/
-ADD . /data/apibox/
-RUN cd /data/apibox/src/apibox.club/apibox/ && GOPATH='/data/apibox/' PATH='/usr/local/go/bin:$PATH' go install
 EXPOSE 8080
 
-CMD ["/data/apibox/bin/apibox","start"]
+CMD ["/go/bin/apibox","start"]
