@@ -200,21 +200,9 @@
                     $(document).prop("title", title);
                 });
 
-                // term.on("data", function(data) {
-                //     var md = data;
-                //     if (md.length !== 0) {
-                //         socket.send(JSON.stringify({ "data": md }));
-                //     }
-                // });
-                // socket.onmessage = function(e) {
-                //     var md = e.data;
-                //     var data = JSON.parse(md.toString());
-                //     if (data.error !== undefined) {
-                //         socket.onerror(data.error);
-                //     } else {
-                //         term.write(data.data);
-                //     }
-                // };
+                term.on('paste', function(data, ev) {
+                    term.write(data);
+                });
 
                 window.term = term;
                 window.socket = socket;
