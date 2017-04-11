@@ -1,8 +1,6 @@
 package website
 
 import (
-	"apibox.club/server"
-	"apibox.club/utils"
 	"bytes"
 	"encoding/json"
 	"encoding/xml"
@@ -12,6 +10,9 @@ import (
 	"path/filepath"
 	"strings"
 	"text/template"
+
+	"apibox.club/server"
+	"apibox.club/utils"
 )
 
 var (
@@ -149,7 +150,14 @@ func (c *Context) OutJson(obj interface{}) {
 	if nil != err {
 		http.Error(c.w, err.Error(), http.StatusInternalServerError)
 	} else {
-		apibox.Gzip_Binary(b, c.w, c.r)
+		if Conf.Web.EnableJSONP {
+			jsonpParam := c.GetFormValue(Conf.Web.JSONPParam)
+			ret := jsonpParam + "(" + string(b) + ")"
+			apibox.Log_Debug("JSONP:", ret)
+			apibox.Gzip_Binary([]byte(ret), c.w, c.r)
+		} else {
+			apibox.Gzip_Binary(b, c.w, c.r)
+		}
 	}
 	return
 }

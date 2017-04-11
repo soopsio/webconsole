@@ -51,6 +51,8 @@ type (
 		StaticDir      string `json:"static_dir" xml:"static_dir"`
 		TemplateDir    string `json:"template_dir" xml:"template_dir"`
 		TemplateSuffix string `json:"template_suffix" xml:"template_suffix"`
+		EnableJSONP    bool   `json:"enable_jsonp" xml:"enable_jsonp"`
+		JSONPParam     string `json:"jsonp_param" xml:"jsonp_param"`
 		EnableTLS      bool   `json:"enable_tls" xml:"enable_tls"`
 		CorsWhiteList  string `json:"cors_white_list" xml:"cors_white_list"`
 		EnableFcgi     bool   `json:"enable_fcgi" xml:"enable_fcgi"`
