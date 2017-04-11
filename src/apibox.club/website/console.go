@@ -97,7 +97,6 @@ var upgrader = websocket.Upgrader{
 		cwl := Conf.Web.CorsWhiteList
 		apibox.Log_Debug("Cors white list:", cwl)
 		apibox.Log_Debug("Request Host:", cwl)
-
 		for _, v := range strings.Split(cwl, ",") {
 			if strings.EqualFold(strings.TrimSpace(v), r.Host) {
 				return true

@@ -153,7 +153,6 @@ func (c *Context) OutJson(obj interface{}) {
 		if Conf.Web.EnableJSONP {
 			jsonpParam := c.GetFormValue(Conf.Web.JSONPParam)
 			ret := jsonpParam + "(" + string(b) + ")"
-			apibox.Log_Debug("JSONP:", ret)
 			apibox.Gzip_Binary([]byte(ret), c.w, c.r)
 		} else {
 			apibox.Gzip_Binary(b, c.w, c.r)
