@@ -187,7 +187,7 @@ Github:  https://github.com/shibingli/webconsole
 
         
         第一种方式（需要二次登陆，同一个域的情况，同样可以使用跨域的方式访问）：
-```HTML
+```javascript
             var protocol = (location.protocol === "https:") ? "https://" : "http://";
             var addr = protocol + location.hostname + ((location.port) ? (":" + location.port) : "")
 
@@ -208,11 +208,12 @@ Github:  https://github.com/shibingli/webconsole
 
         第二种方式（直接输入远端的主机地址、用户名、密码，然后直接登陆。跨域的情况）：
 
-```HTML
-<button class="btn btn-primary" onclick="testDemo();">Test</button>
 
+##<button class="btn btn-primary" onclick="testDemo();">Test</button>
+
+```javascript
 <script type="text/javascript">
-    <!--注意，如果远程主机的访问地址是以IP形式出现的，可以忽略此步骤，直接调用 login 方法。具体登陆地址端口请根据实际情况更改。-->
+    //注意，如果远程主机的访问地址是以IP形式出现的，可以忽略此步骤，直接调用 login 方法。具体登陆地址端口请根据实际情况更改.
     var testDemo = function() {
         $.ajax({
             url: "http://a.com:8081/console/chksshdaddr?rnd=" + Math.random(),
@@ -239,7 +240,7 @@ Github:  https://github.com/shibingli/webconsole
     };
 
 
-    <!--注意，如果远程主机的访问地址是以域名或主机形式出现的，可以执行上面步骤后，再调用本方法。具体登陆地址端口请根据实际情况更改。-->
+    //注意，如果远程主机的访问地址是以域名或主机形式出现的，可以执行上面步骤后，再调用本方法。具体登陆地址端口请根据实际情况更改.
     var login = function(enVMAddr, username, password) {
         $.ajax({
             url: "http://a.com:8081/console/login?rnd=" + Math.random(),
