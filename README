@@ -187,7 +187,7 @@ Github:  https://github.com/shibingli/webconsole
 
         
         第一种方式（需要二次登陆，同一个域的情况，同样可以使用跨域的方式访问）：
-```
+` ``HTML
             var protocol = (location.protocol === "https:") ? "https://" : "http://";
             var addr = protocol + location.hostname + ((location.port) ? (":" + location.port) : "")
 
