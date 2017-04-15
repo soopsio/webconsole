@@ -129,6 +129,8 @@ Github:  https://github.com/shibingli/webconsole
     
 
 程序包结构：
+
+```
 ├── bin
 │   └── apibox
 ├── conf
@@ -142,6 +144,7 @@ Github:  https://github.com/shibingli/webconsole
 │   ├── images
 │   └── scripts
 └── template
+```
 
 运行环境要求：
 
@@ -192,20 +195,20 @@ Github:  https://github.com/shibingli/webconsole
 ======
 
 ```javascript
-            var protocol = (location.protocol === "https:") ? "https://" : "http://";
-            var addr = protocol + location.hostname + ((location.port) ? (":" + location.port) : "")
+var protocol = (location.protocol === "https:") ? "https://" : "http://";
+var addr = protocol + location.hostname + ((location.port) ? (":" + location.port) : "")
 
-            $.post(addr+"/console/chksshdaddr?rnd=" + Math.random(), {
-                "vm_addr": "192.168.220.177:22"
-            }, function(data) {
-                var json = data;
-                if (typeof(data) != "object") {
-                    json = $.parseJSON(data);
-                }
-                if (json.ok) {
-                    location.href = addr + json.data.sshd_addr;
-                }
-            });
+$.post(addr+"/console/chksshdaddr?rnd=" + Math.random(), {
+    "vm_addr": "192.168.220.177:22"
+}, function(data) {
+    var json = data;
+    if (typeof(data) != "object") {
+        json = $.parseJSON(data);
+    }
+    if (json.ok) {
+        location.href = addr + json.data.sshd_addr;
+    }
+});
 ```
 
 
