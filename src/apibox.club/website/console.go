@@ -346,12 +346,7 @@ func (c *Console) ConsoleLogin(w http.ResponseWriter, r *http.Request) {
 	var err error
 	boo := true
 
-	de_vm_addr, err := apibox.AESDecode(vm_addr, aesKey)
-	if nil != err {
-		boo = false
-	}
-
-	vm_addr_arr := strings.Split(de_vm_addr, ":")
+	vm_addr_arr := strings.Split(vm_addr, ":")
 
 	if len(vm_addr_arr) != 2 {
 		boo = false
@@ -362,7 +357,7 @@ func (c *Console) ConsoleLogin(w http.ResponseWriter, r *http.Request) {
 		sh := &ssh{
 			user: user_name,
 			pwd:  user_pwd,
-			addr: de_vm_addr,
+			addr: vm_addr,
 		}
 		sh, err = sh.Connect()
 		if nil != err {
@@ -377,7 +372,7 @@ func (c *Console) ConsoleLogin(w http.ResponseWriter, r *http.Request) {
 				ssh_info := make([]string, 0, 0)
 				ssh_info = append(ssh_info, user_name)
 				ssh_info = append(ssh_info, user_pwd)
-				ssh_info = append(ssh_info, de_vm_addr)
+				ssh_info = append(ssh_info, vm_addr)
 				b64_ssh_info, err := apibox.AESEncode(strings.Join(ssh_info, "\n"), aesKey)
 				if nil != err {
 					apibox.Log_Err("AESEncode:", err)
@@ -431,7 +426,7 @@ func init() {
 	Add_HandleFunc("get,post", "/", console.ConsoleLoginPage)
 	Add_HandleFunc("get,post", "/console/chksshdaddr", console.ChkSSHSrvAddr)
 	Add_HandleFunc("get,post", "/console/login/:vm_addr", console.ConsoleLoginPage)
-	Add_HandleFunc("post", "/console/login", console.ConsoleLogin)
+	Add_HandleFunc("get,post", "/console/login", console.ConsoleLogin)
 	Add_HandleFunc("get,post", "/console/logout", console.ConsoleLogout)
 	Add_HandleFunc("get,post", "/console/main/:vm_info", console.ConsoleMainPage)
 	Add_HandleFunc("get,post", "/console/sshws/:vm_info", SSHWebSocketHandler)

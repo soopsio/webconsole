@@ -49,12 +49,14 @@
                     $.post("/console/chksshdaddr?rnd=" + Math.random(), {
                         "vm_addr": obj.val()
                     }, function(data) {
+                        console.log("data:", data);
                         var json = data;
                         if (typeof(data) != "object") {
                             json = $.parseJSON(data);
                         }
                         if (json.ok) {
-                            dst_vmaddr.val(json.data.en_addr);
+                            console.log(json.data.sshd_addr);
+                            dst_vmaddr.val(json.data.sshd_addr);
                         }
                     });
                 };
