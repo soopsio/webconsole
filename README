@@ -176,6 +176,9 @@ Github:  https://github.com/shibingli/webconsole
 
         JQuery Demo:
 
+        
+        第一种方式（需要二次登陆）：
+
             $.post("/console/chksshdaddr?rnd=" + Math.random(), {
                 "vm_addr": "192.168.220.177:22"
             }, function(data) {
@@ -185,5 +188,25 @@ Github:  https://github.com/shibingli/webconsole
                 }
                 if (json.ok) {
                     alert(json.data.en_addr);
+                }
+            });
+
+        第二种方式（直接输入远端的主机地址、用户名、密码，然后直接登陆）：
+
+            $.post("/console/login?rnd=" + Math.random(), {
+                "vm_addr": "192.168.220.177:22"
+                "user_name":"root",
+	            "user_pwd":"123456"
+            }, function(data) {
+                var json = data;
+                if (typeof(data) != "object") {
+                    json = $.parseJSON(data);
+                }
+                if (json.ok) {
+                    var protocol = (location.protocol === "https:") ? "https://" : "http://";
+                    var addr = protocol + location.hostname + ((location.port) ? (":" + location.port) : "")
+                    location.href = addr+json.data;
+                } else {
+                    alert(json.msg);
                 }
             });

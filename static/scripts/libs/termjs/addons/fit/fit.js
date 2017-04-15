@@ -11,76 +11,76 @@
  * @license MIT
  */
 
-(function (fit) {
-  if (typeof exports === 'object' && typeof module === 'object') {
-    /*
-     * CommonJS environment
-     */
-    module.exports = fit(require('../../xterm'));
-  } else if (typeof define == 'function') {
-    /*
-     * Require.js is available
-     */
-    define(['../../xterm'], fit);
-  } else {
-    /*
-     * Plain browser environment
-     */
-    fit(window.Terminal);
-  }
-})(function (Xterm) {
-  var exports = {};
-
-  exports.proposeGeometry = function (term) {
-    if (!term.element.parentElement) {
-      return null;
+(function(fit) {
+    if (typeof exports === 'object' && typeof module === 'object') {
+        /*
+         * CommonJS environment
+         */
+        module.exports = fit(require('../../xterm'));
+    } else if (typeof define == 'function') {
+        /*
+         * Require.js is available
+         */
+        define(['../../xterm'], fit);
+    } else {
+        /*
+         * Plain browser environment
+         */
+        fit(window.Terminal);
     }
-    var parentElementStyle = window.getComputedStyle(term.element.parentElement),
-        parentElementHeight = parseInt(parentElementStyle.getPropertyValue('height')),
-        parentElementWidth = Math.max(0, parseInt(parentElementStyle.getPropertyValue('width')) - 17),
-        elementStyle = window.getComputedStyle(term.element),
-        elementPaddingVer = parseInt(elementStyle.getPropertyValue('padding-top')) + parseInt(elementStyle.getPropertyValue('padding-bottom')),
-        elementPaddingHor = parseInt(elementStyle.getPropertyValue('padding-right')) + parseInt(elementStyle.getPropertyValue('padding-left')),
-        availableHeight = parentElementHeight - elementPaddingVer,
-        availableWidth = parentElementWidth - elementPaddingHor,
-        container = term.rowContainer,
-        subjectRow = term.rowContainer.firstElementChild,
-        contentBuffer = subjectRow.innerHTML,
-        characterHeight,
-        rows,
-        characterWidth,
-        cols,
-        geometry;
+})(function(Xterm) {
+    var exports = {};
 
-    subjectRow.style.display = 'inline';
-    subjectRow.innerHTML = 'W'; // Common character for measuring width, although on monospace
-    characterWidth = subjectRow.getBoundingClientRect().width;
-    subjectRow.style.display = ''; // Revert style before calculating height, since they differ.
-    characterHeight = parseInt(subjectRow.offsetHeight);
-    subjectRow.innerHTML = contentBuffer;
+    exports.proposeGeometry = function(term) {
+        if (!term.element.parentElement) {
+            return null;
+        }
+        var parentElementStyle = window.getComputedStyle(term.element.parentElement),
+            parentElementHeight = parseInt(parentElementStyle.getPropertyValue('height')),
+            parentElementWidth = Math.max(0, parseInt(parentElementStyle.getPropertyValue('width')) - 17),
+            elementStyle = window.getComputedStyle(term.element),
+            elementPaddingVer = parseInt(elementStyle.getPropertyValue('padding-top')) + parseInt(elementStyle.getPropertyValue('padding-bottom')),
+            elementPaddingHor = parseInt(elementStyle.getPropertyValue('padding-right')) + parseInt(elementStyle.getPropertyValue('padding-left')),
+            availableHeight = parentElementHeight - elementPaddingVer,
+            availableWidth = parentElementWidth - elementPaddingHor,
+            container = term.rowContainer,
+            subjectRow = term.rowContainer.firstElementChild,
+            contentBuffer = subjectRow.innerHTML,
+            characterHeight,
+            rows,
+            characterWidth,
+            cols,
+            geometry;
 
-    rows = parseInt(availableHeight / characterHeight);
-    cols = parseInt(availableWidth / characterWidth);
+        subjectRow.style.display = 'inline';
+        subjectRow.innerHTML = 'W'; // Common character for measuring width, although on monospace
+        characterWidth = subjectRow.getBoundingClientRect().width;
+        subjectRow.style.display = ''; // Revert style before calculating height, since they differ.
+        characterHeight = subjectRow.getBoundingClientRect().height;
+        subjectRow.innerHTML = contentBuffer;
 
-    geometry = {cols: cols, rows: rows};
-    return geometry;
-  };
+        rows = parseInt(availableHeight / characterHeight);
+        cols = parseInt(availableWidth / characterWidth);
 
-  exports.fit = function (term) {
-    var geometry = exports.proposeGeometry(term);
+        geometry = { cols: cols, rows: rows };
+        return geometry;
+    };
 
-    if (geometry) {
-      term.resize(geometry.cols, geometry.rows);
-    }
-  };
+    exports.fit = function(term) {
+        var geometry = exports.proposeGeometry(term);
 
-  Xterm.prototype.proposeGeometry = function () {
-    return exports.proposeGeometry(this);
-  };
+        if (geometry) {
+            term.resize(geometry.cols, geometry.rows);
+        }
+    };
 
-  Xterm.prototype.fit = function () {
-    return exports.fit(this);
-  };
+    Xterm.prototype.proposeGeometry = function() {
+        return exports.proposeGeometry(this);
+    };
 
-  return exports;
+    Xterm.prototype.fit = function() {
+        return exports.fit(this);
+    };
+
+    return exports;
 });

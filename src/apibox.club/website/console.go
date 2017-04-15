@@ -245,18 +245,11 @@ func SSHWebSocketHandler(w http.ResponseWriter, r *http.Request) {
 					if io.EOF == err {
 						return
 					}
-
 					if err != nil {
 						apibox.Log_Err(err.Error())
 						return
 					}
-
 					if n > 0 {
-						// msg := &jsonMsg{
-						// 	Data: string(rbuf[:n]),
-						// }
-						// msgJson, err := json.Marshal(msg)
-						// err = ws.WriteMessage(websocket.TextMessage, msgJson)
 						err = ws.WriteMessage(websocket.TextMessage, rbuf[:n])
 						if err != nil {
 							apibox.Log_Err(err)

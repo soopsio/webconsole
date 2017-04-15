@@ -149,8 +149,8 @@
                 function getwindowSize() {
                     var appbar_height = $("#c-appbar").height();
                     var body_height = $(window).height();
-                    var body_width = $(window).width();
-                    var terminal_height = body_height - appbar_height - 30;
+                    var body_width = $(window).width() - 20;
+                    var terminal_height = body_height - appbar_height - 26;
                     return {
                         width: body_width,
                         height: terminal_height

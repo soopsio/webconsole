@@ -21,14 +21,9 @@
     <link type="text/css" rel="stylesheet" href="/static/scripts/libs/metro-ui/css/metro-icons.min.css">
     <link type="text/css" rel="stylesheet" href="/static/scripts/libs/metro-ui/css/metro-responsive.min.css">
     <link type="text/css" rel="stylesheet" href="/static/scripts/libs/termjs/xterm.min.css">
-    <style type="text/css">
-        .terminal {
-            width: 100%;
-        }
-    </style>
 </head>
 
-<body class="bg-steel">
+<body class="bg-black">
     <div id="c-appbar" class="app-bar darcula" data-role="appbar">
         <a href="javascript:void(0);" class="app-bar-element branding">WebConsole</a>
         <span class="app-bar-divider"></span>
@@ -112,7 +107,7 @@
     $(function() {
         var protocol = (location.protocol === "https:") ? "wss://" : "ws://";
         $("#console_div").OpenTerminal({
-            "wsaddr": protocol+"<abc% .WS_Addr %>"
+            "wsaddr": protocol + "<abc% .WS_Addr %>"
         });
     });
 </script>
