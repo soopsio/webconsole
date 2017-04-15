@@ -1,4 +1,5 @@
-##欢迎大家踊跃报名，利用业余时间来拓展此项目，增加更多的功能服务大家。
+#欢迎大家踊跃报名，利用业余时间来拓展此项目，增加更多的功能服务大家。
+======
 
 欢迎 @jim3mar 加入！
 
@@ -184,9 +185,11 @@ Github:  https://github.com/shibingli/webconsole
     2）、成功获取到加密的 en_addr 信息后，以 GET 或 POST 方式访问  "http(s)://ip:port/console/login/'en_addr'" 即可。注: "en_addr" 是通过第 1）步操作获取的数据。
 
 ##JQuery Demo:
+======
 
         
 ###第一种方式（需要二次登陆，同一个域的情况，同样可以使用跨域的方式访问）：
+======
 
 ```javascript
             var protocol = (location.protocol === "https:") ? "https://" : "http://";
@@ -208,6 +211,7 @@ Github:  https://github.com/shibingli/webconsole
 
 
 ###第二种方式（直接输入远端的主机地址、用户名、密码，然后直接登陆。跨域的情况）：
+======
 
 ```html
 <button class="btn btn-primary" onclick="testDemo();">Test</button>
