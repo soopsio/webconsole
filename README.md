@@ -144,7 +144,7 @@ Github:  https://github.com/shibingli/webconsole
 │   ├── images
 │   └── scripts
 └── template
-```
+
 
 运行环境要求：
 
@@ -164,6 +164,7 @@ Github:  https://github.com/shibingli/webconsole
 4、后台运行可以配置 "conf" 文件夹下的 "conf.json" 文件,将 "daemon" 项配置为 "true" 
 5、运行时日志文件存放在 "log" 文件夹下，以当天时期命名
 6、也可以配置程序以 Nginx 的 fcgi 模式运行,以 Nginx 做为访问入口
+```
 
 
 二、使用
