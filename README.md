@@ -30,9 +30,8 @@
 [安装 Docker](https://docs.docker.com/engine/installation/)
 
 
-欢迎 @jim3mar 加入！
-
-开源捐献日志（感谢各位网友的支持）
+##开源捐献日志（感谢各位网友的支持）
+==================
 
 2017.04.05                    
 
