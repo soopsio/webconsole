@@ -10,8 +10,7 @@
 4、source /etc/profile
 5、cd /opt && git clone --recurse-submodules https://github.com/shibingli/webconsole.git && cd webconsole && git submodule update --init --recursive
 6、cd /opt/webconsole/src/apibox.club/apibox
-7、export GOPATH=/opt/webconsole
-8、go install
+7、GOPATH=/opt/webconsole go install
 ```
 
 [下载 Golang](https://storage.googleapis.com/golang/go1.8.1.linux-amd64.tar.gz)
