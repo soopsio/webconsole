@@ -4,8 +4,8 @@
 ##常规部署
 ------------------
 ```
-1、下载 go1.8.linux-amd64.tar.gz
-2、tar zxvf go1.8.linux-amd64.tar.gz -C /usr/local
+1、下载 go1.8.1.linux-amd64.tar.gz
+2、tar zxvf go1.8.1.linux-amd64.tar.gz -C /usr/local
 3、echo 'export PATH="/usr/local/go/bin:$PATH"' >> /etc/profile
 4、source /etc/profile
 5、cd /opt && git clone --recurse-submodules https://github.com/shibingli/webconsole.git && cd webconsole && git submodule update --init --recursive
@@ -13,16 +13,19 @@
 7、export GOPATH=/opt/webconsole
 8、go install
 ```
+[下载 Golang](https://storage.googleapis.com/golang/go1.8.1.linux-amd64.tar.gz)
+
 
 ##容器部署
 ------------------
 ```
-1、下载并安装 Docker [Docker](https://docs.docker.com/engine/installation/)
+1、下载并安装 Docker
 2、cd /opt && git clone --recurse-submodules https://github.com/shibingli/webconsole.git && cd webconsole && git submodule update --init --recursive
 3、cd /opt/webconsole
 4、docker build -t webconsole:latest .
 5、docker run -d -p 8080:8080 --restart=always --name webconsole webconsole:latest
 ```
+[安装 Docker](https://docs.docker.com/engine/installation/)
 
 
 欢迎 @jim3mar 加入！
