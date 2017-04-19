@@ -1,6 +1,30 @@
 ##欢迎大家踊跃报名，利用业余时间来拓展此项目，增加更多的功能服务大家。
 ======
 
+##常规部署
+------------------
+```
+1、下载 go1.8.linux-amd64.tar.gz
+2、tar zxvf go1.8.linux-amd64.tar.gz -C /usr/local
+3、echo 'export PATH="/usr/local/go/bin:$PATH"' >> /etc/profile
+4、source /etc/profile
+5、cd /opt && git clone --recurse-submodules https://github.com/shibingli/webconsole.git && cd webconsole && git submodule update --init --recursive
+6、cd /opt/webconsole/src/apibox.club/apibox
+7、export GOPATH=/opt/webconsole
+8、go install
+```
+
+##容器部署
+------------------
+```
+1、下载并安装 Docker [Docker](https://docs.docker.com/engine/installation/)
+2、cd /opt && git clone --recurse-submodules https://github.com/shibingli/webconsole.git && cd webconsole && git submodule update --init --recursive
+3、cd /opt/webconsole
+4、docker build -t webconsole:latest .
+5、docker run -d -p 8080:8080 --restart=always --name webconsole webconsole:latest
+```
+
+
 欢迎 @jim3mar 加入！
 
 开源捐献日志（感谢各位网友的支持）
@@ -26,6 +50,12 @@
     @玩蝴蝶的法师(qq:43588476)   捐献：50.00 元（人民币）
 
 更新日志
+
+2017.04.19
+
+    更新：
+        1、删除 build.sh
+        2、添加部署说明
 
 2017.04.15
 
