@@ -96,7 +96,7 @@ var upgrader = websocket.Upgrader{
 		// 跨域处理，这里需要做一下安全防护。比如：请求白名单(这里只是简单的做了请求HOST白名单)
 		cwl := Conf.Web.CorsWhiteList
 		apibox.Log_Debug("Cors white list:", cwl)
-		apibox.Log_Debug("Request Host:", cwl)
+		apibox.Log_Debug("Request Host:", r.Host)
 		for _, v := range strings.Split(cwl, ",") {
 			if strings.EqualFold(strings.TrimSpace(v), r.Host) {
 				return true
