@@ -3,7 +3,6 @@ package website
 import (
 	"bufio"
 	"bytes"
-	"io"
 	"net"
 	"net/http"
 	"net/url"
@@ -243,9 +242,6 @@ func SSHWebSocketHandler(w http.ResponseWriter, r *http.Request) {
 				br := bufio.NewReader(channel)
 				for {
 					x, size, err := br.ReadRune()
-					if err == io.EOF {
-						return
-					}
 					if err != nil {
 						apibox.Log_Err(err.Error())
 						return
@@ -259,6 +255,7 @@ func SSHWebSocketHandler(w http.ResponseWriter, r *http.Request) {
 							err = ws.WriteMessage(websocket.TextMessage, []byte("@"))
 						}
 						if err != nil {
+							apibox.Log_Err(err.Error())
 							return
 						}
 
