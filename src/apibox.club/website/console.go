@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"net/url"
 	"strings"
+	"time"
 	"unicode/utf8"
 
 	"apibox.club/utils"
@@ -240,27 +241,48 @@ func SSHWebSocketHandler(w http.ResponseWriter, r *http.Request) {
 					done <- true
 				}()
 				br := bufio.NewReader(channel)
-				for {
-					x, size, err := br.ReadRune()
-					if err != nil {
-						apibox.Log_Err(err.Error())
-						return
-					}
-					if size > 0 {
-						if x != utf8.RuneError {
-							p := make([]byte, size)
-							utf8.EncodeRune(p, x)
-							err = ws.WriteMessage(websocket.TextMessage, p)
-						} else {
-							err = ws.WriteMessage(websocket.TextMessage, []byte("@"))
-						}
+				buf := []byte{}
+
+				t := time.NewTimer(time.Millisecond * 100)
+				defer t.Stop()
+				r := make(chan rune)
+
+				go func() {
+					for {
+						x, size, err := br.ReadRune()
 						if err != nil {
 							apibox.Log_Err(err.Error())
 							return
 						}
+						if size > 0 {
+							r <- x
+						}
+					}
+				}()
 
+				for {
+					select {
+					case <-t.C:
+						if len(buf) != 0 {
+							err = ws.WriteMessage(websocket.TextMessage, buf)
+							buf = []byte{}
+							if err != nil {
+								apibox.Log_Err(err.Error())
+								return
+							}
+						}
+						t.Reset(time.Millisecond * 100)
+					case d := <-r:
+						if d != utf8.RuneError {
+							p := make([]byte, utf8.RuneLen(d))
+							utf8.EncodeRune(p, d)
+							buf = append(buf, p...)
+						} else {
+							buf = append(buf, []byte("@")...)
+						}
 					}
 				}
+
 			}()
 			<-done
 		} else {
