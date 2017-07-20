@@ -1,12 +1,13 @@
 package website
 
 import (
+	"bufio"
 	"bytes"
-	"io"
 	"net"
 	"net/http"
 	"net/url"
 	"strings"
+	"unicode/utf8"
 
 	"apibox.club/utils"
 	"github.com/gorilla/websocket"
@@ -238,23 +239,26 @@ func SSHWebSocketHandler(w http.ResponseWriter, r *http.Request) {
 				defer func() {
 					done <- true
 				}()
-				rbuf := make([]byte, 1024)
+				br := bufio.NewReader(channel)
 				for {
-					n, err := channel.Read(rbuf)
-
-					if io.EOF == err {
-						return
-					}
+					x, size, err := br.ReadRune()
 					if err != nil {
 						apibox.Log_Err(err.Error())
 						return
 					}
-					if n > 0 {
-						err = ws.WriteMessage(websocket.TextMessage, rbuf[:n])
+					if size > 0 {
+						if x != utf8.RuneError {
+							p := make([]byte, size)
+							utf8.EncodeRune(p, x)
+							err = ws.WriteMessage(websocket.TextMessage, p)
+						} else {
+							err = ws.WriteMessage(websocket.TextMessage, []byte("@"))
+						}
 						if err != nil {
-							apibox.Log_Err(err)
+							apibox.Log_Err(err.Error())
 							return
 						}
+
 					}
 				}
 			}()
