@@ -31,7 +31,6 @@
  *   other features.
  */
 
-
 /*
  *  Default style for xterm.js
  */
@@ -42,6 +41,9 @@
     font-family: courier-new, courier, monospace;
     font-feature-settings: "liga" 0;
     position: relative;
+    user-select: none;
+    -ms-user-select: none;
+    -webkit-user-select: none;
 }
 
 .terminal.focus,
@@ -107,7 +109,6 @@
 .terminal.xterm-cursor-style-underline .terminal-cursor {
     position: relative;
 }
-
 .terminal.xterm-cursor-style-bar .terminal-cursor::before,
 .terminal.xterm-cursor-style-underline .terminal-cursor::before {
     content: "";
@@ -115,26 +116,22 @@
     position: absolute;
     background-color: #fff;
 }
-
 .terminal.xterm-cursor-style-bar .terminal-cursor::before {
     top: 0;
     bottom: 0;
     left: 0;
     width: 1px;
 }
-
 .terminal.xterm-cursor-style-underline .terminal-cursor::before {
     bottom: 0;
     left: 0;
     right: 0;
     height: 1px;
 }
-
 .terminal.xterm-cursor-style-bar.focus.xterm-cursor-blink.xterm-cursor-blink-on .terminal-cursor::before,
 .terminal.xterm-cursor-style-underline.focus.xterm-cursor-blink.xterm-cursor-blink-on .terminal-cursor::before {
     background-color: transparent;
 }
-
 .terminal.xterm-cursor-style-bar.focus.xterm-cursor-blink .terminal-cursor::before,
 .terminal.xterm-cursor-style-underline.focus.xterm-cursor-blink .terminal-cursor::before {
     background-color: #fff;
@@ -159,7 +156,8 @@
     overflow-y: scroll;
 }
 
-.terminal .xterm-wide-char {
+.terminal .xterm-wide-char,
+.terminal .xterm-normal-char {
     display: inline-block;
 }
 
@@ -169,7 +167,7 @@
     top: 0;
 }
 
-.terminal .xterm-rows>div {
+.terminal .xterm-rows > div {
     /* Lines containing spans and text nodes ocassionally wrap despite being the same width (#327) */
     white-space: nowrap;
 }
@@ -185,11 +183,28 @@
     left: -9999em;
 }
 
+.terminal.enable-mouse-events {
+    /* When mouse events are enabled (eg. tmux), revert to the standard pointer cursor */
+    cursor: default;
+}
+
+.terminal .xterm-selection {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1;
+    opacity: 0.3;
+    pointer-events: none;
+}
+
+.terminal .xterm-selection div {
+    position: absolute;
+    background-color: #fff;
+}
 
 /*
  *  Determine default colors for xterm.js
  */
-
 .terminal .xterm-bold {
     font-weight: bold;
 }
