@@ -29,10 +29,11 @@ func Run() {
 		E.Logger.SetLevel(log.DEBUG)
 	}
 
-	E.Use(middleware.RequestID(), middleware.Logger(), middleware.Recover(),
-		middleware.GzipWithConfig(middleware.GzipConfig{Level: 9}))
-
 	E.Use(rcmw.MwVersion, rcmw.MwContext)
+
+	E.Use(middleware.CORS(), middleware.RequestID(), middleware.Logger(), middleware.Recover())
+
+	E.Use(middleware.GzipWithConfig(middleware.GzipConfig{Level: 9}))
 
 	store, err := NewSessionStore([]byte("#Www-RealClouds_Org_Or_wWw.rEalcLouds_iO*"))
 	if nil != err {
