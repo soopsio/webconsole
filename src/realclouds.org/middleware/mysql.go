@@ -71,8 +71,8 @@ type DB struct {
 	Mutex sync.RWMutex
 }
 
-//MwMySQL MySQL middleware
-func MwMySQL() *DB {
+//MySQL New MySQL dirver
+func MySQL() *DB {
 	db, err := MySQLConf()
 	if nil != err {
 		log.Fatalf("New mysql driver error: %v", err.Error())
@@ -81,8 +81,8 @@ func MwMySQL() *DB {
 	return &DB{Gorm: db}
 }
 
-//MySQL Server header
-func (d *DB) MySQL(next echo.HandlerFunc) echo.HandlerFunc {
+//MwMySQL MySQL middleware
+func (d *DB) MwMySQL(next echo.HandlerFunc) echo.HandlerFunc {
 	return func(c echo.Context) error {
 		d.Mutex.Lock()
 		defer d.Mutex.Unlock()

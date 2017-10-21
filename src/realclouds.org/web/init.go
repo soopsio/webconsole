@@ -42,7 +42,7 @@ func Run() {
 
 	E.Use(session.Sessions("rcid", store))
 
-	// E.Use(rcmw.MwMySQL().MySQL)
+	// E.Use(rcmw.MySQL().MwMySQL)
 
 	pd := utils.GetProjectDir()
 
