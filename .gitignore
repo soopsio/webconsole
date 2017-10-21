@@ -30,3 +30,6 @@ bin/apibox
 bin/apibox
 
 bin/apibox
+
+run
+*/run.go
