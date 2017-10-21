@@ -7,7 +7,10 @@ func RouterInit() {
 	APIRouter.Use()
 
 	WebRouter := E.Group("/")
-	WebRouter.Use()
+
+	// WebRouter.Use(middleware.CSRFWithConfig(middleware.CSRFConfig{
+	// 	TokenLookup: "form:X-XSRF-TOKEN",
+	// }))
 
 	index := Index{}
 	WebRouter.GET("", index.MainPage)

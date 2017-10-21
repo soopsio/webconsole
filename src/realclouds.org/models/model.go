@@ -10,10 +10,17 @@ import (
 
 //Model *
 type Model struct {
-	ID        string     `sql:"index" gorm:"primary_key;column:id;type:varchar(100)" json:"id" xml:"id"`
-	CreatedAt time.Time  `sql:"index" gorm:"column:created_at;type:timestamp" json:"created_at" xml:"created_at"`
-	UpdatedAt time.Time  `sql:"index" gorm:"column:updated_at;type:timestamp" json:"updated_at" xml:"updated_at"`
-	DeletedAt *time.Time `sql:"index" gorm:"column:deleted_at;type:timestamp" json:"deleted_at" xml:"deleted_at"`
+	ID          string     `sql:"index" gorm:"primary_key;column:id;type:varchar(100)" json:"id,omitempty" xml:"id,omitempty"`
+	Name        string     `sql:"index" gorm:"column:name;type:varchar(100)" json:"name,omitempty" xml:"name,omitempty"`
+	Description string     `gorm:"column:description;type:text" json:"description,omitempty" xml:"description,omitempty"`
+	CreatedAt   time.Time  `sql:"index" gorm:"column:created_at;type:timestamp" json:"created_at,omitempty" xml:"created_at,omitempty"`
+	UpdatedAt   time.Time  `sql:"index" gorm:"column:updated_at;type:timestamp" json:"updated_at,omitempty" xml:"updated_at,omitempty"`
+	DeletedAt   *time.Time `sql:"index" gorm:"column:deleted_at;type:timestamp" json:"deleted_at,omitempty" xml:"deleted_at,omitempty"`
+	SortNumber  int        `gorm:"column:sort_number;type:int(11)" json:"sort_number,omitempty" xml:"sort_number,omitempty"`
+
+	MemcachedFlags            int   `gorm:"column:flags;type:int(11)" json:"flags,omitempty" xml:"flags,omitempty"`
+	MemcachedCasColumn        int64 `gorm:"column:cas_column;type:bigint(20)" json:"cas_column,omitempty" xml:"cas_column,omitempty"`
+	MemcachedExpireTimeColumn int   `gorm:"column:expire_time_column;int(11)" json:"expire_time_column,omitempty" xml:"expire_time_column,omitempty"`
 }
 
 //BeforeCreate ID处理
@@ -23,6 +30,21 @@ func (d *Model) BeforeCreate(scope *gorm.Scope) error {
 		return err
 	}
 	return nil
+}
+
+//PicModel *
+type PicModel struct {
+	Pic    string `gorm:"column:pic;type:text" json:"pic,omitempty" xml:"pic,omitempty"`
+	Pic3rd string `gorm:"column:pic_3rd;type:text" json:"pic_3rd,omitempty" xml:"pic_3rd,omitempty"`
+}
+
+//ComputeOffset *
+func ComputeOffset(pageNumber, pageSize int) int {
+	offset := 0
+	if pageNumber > 1 {
+		offset = (pageNumber - 1) * pageSize
+	}
+	return offset
 }
 
 //DBCtx *

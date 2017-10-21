@@ -23,117 +23,33 @@ func Run() {
 	utils.RegGob(time.Time{})
 
 	E.HideBanner = true
-	E.Logger.SetLevel(log.DEBUG)
 
-	E.Use(rcmw.MwVersion, rcmw.MwContext)
+	devMode := utils.GetENVToBool("DEV_MODE")
+	if devMode {
+		E.Logger.SetLevel(log.DEBUG)
+	}
 
 	E.Use(middleware.RequestID(), middleware.Logger(), middleware.Recover(),
 		middleware.GzipWithConfig(middleware.GzipConfig{Level: 9}))
 
-	redisAddr := utils.GetENV("REDIS_ADDR")
-	if len(redisAddr) == 0 {
-		redisAddr = "127.0.0.1:6379"
-	}
+	E.Use(rcmw.MwVersion, rcmw.MwContext)
 
-	redisPwd := utils.GetENV("REDIS_PWD")
-	if len(redisPwd) == 0 {
-		redisPwd = ""
-	}
-
-	var store session.Store
-	var err error
-
-	redisSession := utils.GetENV("REDIS_SESSION")
-	if len(redisSession) > 0 && ("true" == redisSession || "1" == redisSession) {
-		store, err = session.NewRedisStore(32, "tcp", redisAddr, redisPwd, []byte("#_www-A^yer*Dudu_CoM_$-&==2017.17+20-87"))
-		if err != nil {
-			E.Logger.Fatal(err)
-		}
-	} else {
-		store = session.NewCookieStore([]byte("#_www-A^yer*Dudu_CoM_$-&==2017.17+20-87"))
-	}
-
-	sessionTimeout := utils.GetENV("SESSION_TIMEOUT")
-	if len(sessionTimeout) == 0 {
-		sessionTimeout = "1800"
-	}
-
-	sessionTimeoutInt, err := utils.StringUtils(sessionTimeout).Int()
+	store, err := NewSessionStore([]byte("#Www-RealClouds_Org_Or_wWw.rEalcLouds_iO*"))
 	if nil != err {
-		sessionTimeoutInt = 1800
+		E.Logger.Fatalf("New session store error: %v", err.Error())
 	}
-	store.MaxAge(sessionTimeoutInt)
 
 	E.Use(session.Sessions("rcid", store))
 
-	dbHost := utils.GetENV("DB_HOST")
-	if len(dbHost) == 0 {
-		dbHost = "127.0.0.1:3306"
-	}
-
-	dbUserName := utils.GetENV("DB_USERNAME")
-	if len(dbUserName) == 0 {
-		dbUserName = "ayerdudu"
-	}
-
-	dbPassword := utils.GetENV("DB_PASSWORD")
-	if len(dbPassword) == 0 {
-		dbPassword = "AyerDudu888"
-	}
-
-	dbDataBase := utils.GetENV("DB_DATABASE")
-	if len(dbDataBase) == 0 {
-		dbDataBase = "ayerdudu"
-	}
-
-	dbMaxIdleConns := utils.GetENV("DB_MAXIDLECONNS")
-	if len(dbMaxIdleConns) == 0 {
-		dbMaxIdleConns = "10"
-	}
-
-	dbMaxOpenConns := utils.GetENV("DB_MAXOPENCONNS")
-	if len(dbDataBase) == 0 {
-		dbMaxOpenConns = "100"
-	}
-
-	maxIdleConns, err := utils.StringUtils(dbMaxIdleConns).Int()
-	if nil != err {
-		maxIdleConns = 10
-	}
-
-	maxOpenConns, err := utils.StringUtils(dbMaxOpenConns).Int()
-	if nil != err {
-		maxOpenConns = 100
-	}
-
-	if mySQL, err := rcmw.MySQLConf(
-		rcmw.DBConfig{
-			Addr:         dbHost,
-			MaxIdleConns: maxIdleConns,
-			MaxOpenConns: maxOpenConns,
-			UserName:     dbUserName,
-			Password:     dbPassword,
-			DataBase:     dbDataBase,
-			LogMode:      true,
-		},
-	); nil != err {
-		E.Logger.Fatalf("%v", err)
-	} else {
-		em := rcmw.MwMySQL(mySQL)
-		E.Use(em.MySQL)
-	}
+	// E.Use(rcmw.MwMySQL().MySQL)
 
 	pd := utils.GetProjectDir()
 
 	E.Static("/static", pd+"/static")
 
-	// E.Use(middleware.CSRFWithConfig(middleware.CSRFConfig{
-	// 	TokenLookup: "form:X-XSRF-TOKEN",
-	// }))
-
 	E.Renderer = rcmw.MwRender(rcmw.RenderOpt{
 		Directory: pd + "/templates/default",
-		DevMode:   true,
+		DevMode:   devMode,
 	})
 
 	RouterInit()
@@ -148,15 +64,15 @@ func Run() {
 		tlsPort = "8443"
 	}
 
-	tls := utils.GetENV("TLS")
-	if len(tls) > 0 && ("true" == tls || "1" == tls) {
+	tls := utils.GetENVToBool("TLS")
+	if tls {
 		cert := utils.GetENV("CERT")
 		key := utils.GetENV("KEY")
 		if len(cert) > 0 && len(key) > 0 {
 			E.Logger.Fatal(E.StartTLS(":"+tlsPort, cert, key))
 		} else {
 			tlsHost := utils.GetENV("TLS_HOST")
-			if len(tlsHost) != 0 {
+			if len(tlsHost) > 0 {
 				E.AutoTLSManager.Cache = autocert.DirCache(pd + "/.cache")
 				E.Logger.Fatal(E.StartAutoTLS(tlsHost + ":" + tlsPort))
 			} else {

@@ -2,97 +2,61 @@ package middleware
 
 import (
 	"fmt"
+	"log"
 	"sync"
 
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/mysql" //Gorm 支持
 	"github.com/labstack/echo"
+	"realclouds.org/utils"
 )
 
-//DBConfig *
-type DBConfig struct {
-	// Addr *
-	Addr string `json:"addr" xml:"addr"`
-
-	// MaxIdleConns *
-	MaxIdleConns int `json:"max_idle_conns" xml:"max_idle_conns"`
-
-	// MaxOpenConns *
-	MaxOpenConns int `json:"max_open_conns" xml:"max_open_conns"`
-
-	// Username *
-	UserName string `json:"username" xml:"username"`
-
-	// Password *
-	Password string `json:"password" xml:"password"`
-
-	// DataBase *
-	DataBase string `json:"database" xml:"database"`
-
-	//LogMode *
-	LogMode bool `json:"log_mode" xml:"log_mode"`
-}
-
-//DefaultConfig *
-var DefaultConfig = DBConfig{
-	Addr: "127.0.0.1:3306",
-
-	// MaxIdleConns *
-	MaxIdleConns: 10,
-	// MaxOpenConns *
-	MaxOpenConns: 100,
-
-	// Username *
-	UserName: "root",
-
-	// Password *
-	Password: "123456",
-
-	// DataBase *
-	DataBase: "test",
-
-	//LogMode *
-	LogMode: false,
-}
-
 //MySQLConf MySQL config
-func MySQLConf(config DBConfig) (*gorm.DB, error) {
+func MySQLConf() (*gorm.DB, error) {
 
-	if len(config.Addr) == 0 {
-		config.Addr = DefaultConfig.Addr
+	devMode := utils.GetENVToBool("DEV_MODE")
+
+	dbHost := utils.GetENV("DB_HOST")
+	if len(dbHost) == 0 {
+		dbHost = "127.0.0.1:3306"
 	}
 
-	if config.MaxIdleConns == 0 {
-		config.MaxIdleConns = DefaultConfig.MaxIdleConns
+	dbUserName := utils.GetENV("DB_USERNAME")
+	if len(dbUserName) == 0 {
+		dbUserName = "webconsole"
 	}
 
-	if config.MaxOpenConns == 0 {
-		config.MaxOpenConns = DefaultConfig.MaxOpenConns
+	dbPassword := utils.GetENV("DB_PASSWORD")
+	if len(dbPassword) == 0 {
+		dbPassword = "webconsole"
 	}
 
-	if len(config.UserName) == 0 {
-		config.UserName = DefaultConfig.UserName
+	dbDataBase := utils.GetENV("DB_DATABASE")
+	if len(dbDataBase) == 0 {
+		dbDataBase = "webconsole"
 	}
 
-	if len(config.Password) == 0 {
-		config.Password = DefaultConfig.Password
+	dbMaxIdleConns, err := utils.GetENVToInt("DB_MAXIDLECONNS")
+	if nil != err {
+		dbMaxIdleConns = 10
 	}
 
-	if len(config.DataBase) == 0 {
-		config.DataBase = DefaultConfig.DataBase
+	dbMaxOpenConns, err := utils.GetENVToInt("DB_MAXOPENCONNS")
+	if nil != err {
+		dbMaxOpenConns = 100
 	}
 
-	dbURL := fmt.Sprintf("%s:%s@tcp(%s)/%s?charset=utf8mb4&collation=utf8mb4_unicode_ci&parseTime=True&loc=Asia%%2FShanghai&timeout=30s", config.UserName, config.Password, config.Addr, config.DataBase)
+	dbURL := fmt.Sprintf("%s:%s@tcp(%s)/%s?charset=utf8mb4&collation=utf8mb4_unicode_ci&parseTime=True&loc=Asia%%2FShanghai&timeout=30s", dbUserName, dbPassword, dbHost, dbDataBase)
 
 	db, err := gorm.Open("mysql", dbURL)
 	if nil != err {
 		return nil, err
 	}
 
-	db.DB().SetMaxIdleConns(config.MaxIdleConns)
-	db.DB().SetMaxOpenConns(config.MaxOpenConns)
+	db.DB().SetMaxIdleConns(dbMaxIdleConns)
+	db.DB().SetMaxOpenConns(dbMaxOpenConns)
 
-	db.LogMode(config.LogMode)
+	db.LogMode(devMode)
 
 	if err = db.DB().Ping(); nil != err {
 		return nil, err
@@ -108,7 +72,12 @@ type DB struct {
 }
 
 //MwMySQL MySQL middleware
-func MwMySQL(db *gorm.DB) *DB {
+func MwMySQL() *DB {
+	db, err := MySQLConf()
+	if nil != err {
+		log.Fatalf("New mysql driver error: %v", err.Error())
+		return nil
+	}
 	return &DB{Gorm: db}
 }
 

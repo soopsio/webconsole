@@ -20,7 +20,6 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
-	"regexp"
 	"strconv"
 	"strings"
 	"time"
@@ -35,13 +34,31 @@ import (
 )
 
 var (
-	//PathSeparator
-	PathSeparator = string(os.PathSeparator)
-	DevNull       = os.DevNull
+	PathSeparator = string(os.PathSeparator) //PathSeparator
+	DevNull       = os.DevNull               //DevNull
 )
 
 func GetENV(key string) string {
 	return strings.TrimSpace(strings.ToLower(os.Getenv(key)))
+}
+
+func GetENVToBool(key string) bool {
+	envStr := strings.TrimSpace(strings.ToLower(os.Getenv(key)))
+	boo, err := StringUtils(envStr).Bool()
+	if nil != err {
+		boo = false
+	}
+	return boo
+}
+
+func GetENVToInt(key string) (int, error) {
+	envStr := strings.TrimSpace(strings.ToLower(os.Getenv(key)))
+	return StringUtils(envStr).Int()
+}
+
+func GetENVToInt64(key string) (int64, error) {
+	envStr := strings.TrimSpace(strings.ToLower(os.Getenv(key)))
+	return StringUtils(envStr).Int64()
 }
 
 func GetBinPath() (string, error) {
@@ -206,27 +223,9 @@ func (s StringUtils) ToTitleUpper() string {
 	return str
 }
 
-func (s StringUtils) RegexpSQLVal() (bool, error) {
-	r := "^[0-9a-zA-Z\\s-_\u4E00-\u9FA5'=@.?]+$"
-	b, err := regexp.MatchString(r, s.String())
-	return bool(b), err
-}
-
-func (s StringUtils) ContainsNum() (bool, error) {
-	r := "^.*\\d+.*+$"
-	b, err := regexp.MatchString(r, s.String())
-	return bool(b), err
-}
-
 func (s StringUtils) ContainsBool(sep string) bool {
 	index := strings.Index(s.String(), sep)
 	return index > -1
-}
-
-func (s StringUtils) RegexpSQLSgin() (bool, error) {
-	r := "^[<>=!?]+$"
-	b, err := regexp.MatchString(r, s.String())
-	return bool(b), err
 }
 
 func (s StringUtils) String() string {
