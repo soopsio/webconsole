@@ -24,9 +24,4 @@ _testmain.go
 [568vq].out
 bin/*
 bin/apibox
-
-.vscode/tasks.json
-
-bin/apibox
-
-bin/apibox
+run

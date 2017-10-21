@@ -1,0 +1,47 @@
+ // See https://go.microsoft.com/fwlink/?LinkId=733558
+ // for the documentation about the tasks.json format
+ {
+     "version": "0.1.0",
+     "tasks": [{
+         "taskName": "Build",
+         "echoCommand": true,
+         "isShellCommand": true,
+         "isBuildCommand": true,
+         "command": "go",
+         "options": {
+             "env": {
+                 "CGO_ENABLED": "0",
+                 "GOPATH": "${workspaceRoot}"
+             }
+         },
+         "args": ["build", "-v", "${workspaceRoot}/src/realclouds.org/run/run.go"],
+         "isTestCommand": true
+     }, {
+         "taskName": "Build-File",
+         "echoCommand": true,
+         "isShellCommand": true,
+         "command": "go",
+         "options": {
+             "env": {
+                 "GOPATH": "${workspaceRoot}"
+             }
+         },
+         "args": ["build", "-v", "${file}"],
+         "isTestCommand": true
+     }, {
+         "taskName": "Build-Win",
+         "echoCommand": true,
+         "isShellCommand": true,
+         "command": "go",
+         "options": {
+             "env": {
+                 "GOPATH": "${workspaceRoot}",
+                 "CGO_ENABLED": "0",
+                 "GOOS": "windows",
+                 "GOARCH": "amd64"
+             }
+         },
+         "args": ["build", "-v", "${workspaceRoot}/src/realclouds.org/run/run.go"],
+         "isTestCommand": true
+     }]
+ }

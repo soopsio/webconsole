@@ -1,9 +1,5 @@
-FROM golang:1.8.3-alpine
-
+FROM shibingli/alpine:3.6
 MAINTAINER Eric Shi <shibingli@realclouds.org>
-ADD . /go/
-RUN cd /go/src/apibox.club/apibox/ && go install -v
-RUN rm -Rf /go/src
+ADD . /opt/app/
 EXPOSE 8080
-
-CMD ["/go/bin/apibox","start"]
+CMD ["/opt/app/run"]
