@@ -1,6 +1,6 @@
 package: .
 homepage: https://webconsole.realclouds.org
-license: MIT
+license: Apache License Version 2.0
 owners:
 - name: Eric Shi
   email: shibingli@realclouds.org
