@@ -13,5 +13,5 @@ type Index struct {
 func (i *Index) MainPage(c echo.Context) error {
 	ctx := c.(*middleware.Context)
 
-	return ctx.ToString("Hello RealClouds.")
+	return ctx.ToHTML("login", nil)
 }

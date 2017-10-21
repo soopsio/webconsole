@@ -133,6 +133,7 @@ func Run() {
 
 	E.Renderer = rcmw.MwRender(rcmw.RenderOpt{
 		Directory: pd + "/templates/default",
+		DevMode:   true,
 	})
 
 	RouterInit()

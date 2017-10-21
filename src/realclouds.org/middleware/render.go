@@ -4,17 +4,21 @@ import (
 	"html/template"
 	"io"
 	"io/ioutil"
+	"log"
 	"os"
 	"path/filepath"
 	"strings"
 
+	"realclouds.org/utils"
+
 	"github.com/labstack/echo"
 )
 
-//RenderOpt is a custom html/template render for Echo framework
+//RenderOpt 自定义 Template 参数
 type RenderOpt struct {
 	Directory string
 	Suffix    string
+	DevMode   bool
 }
 
 type tmplPath struct {
@@ -27,6 +31,9 @@ type tmplPath struct {
 type Template struct {
 	templates *template.Template
 	tmplPaths map[string]tmplPath
+	suffix    string
+	directory string
+	devmode   bool
 }
 
 //MwRender Echo 自定义 Render
@@ -47,6 +54,10 @@ func MwRender(opts ...RenderOpt) *Template {
 	if len(opt.Suffix) == 0 {
 		opt.Suffix = ".html"
 	}
+
+	t.directory = opt.Directory
+	t.suffix = opt.Suffix
+	t.devmode = opt.DevMode
 
 	templatePathWalk := func(p string, f os.FileInfo, err error) error {
 		if f == nil {
@@ -77,7 +88,6 @@ func MwRender(opts ...RenderOpt) *Template {
 			if len(htmlTxt) != 0 {
 				var tpl *template.Template
 				if t.templates == nil {
-					// tpl.templates = template.New(tk).Funcs(templatesFuncMap)
 					t.templates = template.New(tk)
 				}
 				if tk == t.templates.Name() {
@@ -96,5 +106,14 @@ func MwRender(opts ...RenderOpt) *Template {
 
 // Render renders a template document
 func (t *Template) Render(w io.Writer, name string, data interface{}, c echo.Context) error {
+	if t.devmode {
+		t, err := template.ParseFiles(t.directory + utils.PathSeparator + name + t.suffix)
+		if nil != err {
+			log.Panicf("template parse glob error: %v", err)
+			return err
+		}
+		t = t.Delims("{%", "%}")
+		return t.Execute(w, data)
+	}
 	return t.templates.ExecuteTemplate(w, name, data)
 }
