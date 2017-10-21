@@ -11,6 +11,11 @@
 5、cd /opt && git clone --recurse-submodules https://github.com/shibingli/webconsole.git && cd webconsole && git submodule update --init --recursive
 6、cd /opt/webconsole/src/apibox.club/apibox
 7、GOPATH=/opt/webconsole go install
+8、设置开机自动启动
+  cp /opt/webconsole/conf/webconsole  /etc/init.d/   && chmod   755 /etc/init.d/webconsole 
+  chkconfig   --add  webconsole  &&  chkconfig webconsole   on  && service webconsole   start
+  
+
 ```
 
 [下载 Golang](https://storage.googleapis.com/golang/go1.8.1.linux-amd64.tar.gz)
