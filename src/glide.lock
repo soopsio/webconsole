@@ -1,5 +1,5 @@
-hash: d02102f22d1397942feed8c670c03c85a0a757cf3944e6e6e1e0ce287ababf73
-updated: 2017-10-21T21:03:21.215272468+08:00
+hash: 6d66baf9a543671c0430664cc8ec1470670cea8c55606c2f73b5b2ae608de766
+updated: 2017-10-22T21:11:31.758341003+08:00
 imports:
 - name: github.com/antonlindstrom/pgstore
   version: a407030ba6d0efd9a1aad3d0cfc18a9b13d2f2e7
@@ -42,7 +42,7 @@ imports:
   - log
   - random
 - name: github.com/lib/pq
-  version: 456514e2defec52e0cd37f90ccf17ec8b28295e2
+  version: b0d5024adb34b4122c6ee7eeb6ab511f7223222d
   subpackages:
   - oid
 - name: github.com/mattn/go-colorable
