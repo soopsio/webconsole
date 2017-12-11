@@ -32,7 +32,6 @@ func (s *ssh) Connect() (*ssh, error) {
 	config.SetDefaults()
 	config.User = s.user
 	config.Auth = []gossh.AuthMethod{gossh.Password(s.pwd)}
-	config.HostKeyCallback = gossh.InsecureIgnoreHostKey()
 	client, err := gossh.Dial("tcp", s.addr, config)
 	if nil != err {
 		return nil, err
