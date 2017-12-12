@@ -26,9 +26,11 @@
 ```
 1、下载并安装 Docker
 2、cd /opt && git clone --recurse-submodules https://github.com/shibingli/webconsole.git && cd webconsole && git submodule update --init --recursive
-3、cd /opt/webconsole
-4、docker build -t webconsole:latest .
-5、docker run -d -p 8080:8080 --restart=always --name webconsole webconsole:latest
+3、cd /opt/webconsole/src/apibox.club/apibox
+4、GOPATH=/opt/webconsole go install
+5、cd /opt/webconsole
+6、docker build -t webconsole:latest .
+7、docker run -d -p 8080:8080 --restart=always --name webconsole webconsole:latest
 ```
 
 [安装 Docker](https://docs.docker.com/engine/installation/)
