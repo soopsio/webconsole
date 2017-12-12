@@ -12,7 +12,7 @@
 6、cd /opt/webconsole/src/apibox.club/apibox
 7、GOPATH=/opt/webconsole go install
 8、设置开机自动启动
-  cp /opt/webconsole/conf/webconsole  /etc/init.d/   && chmod   755 /etc/init.d/webconsole 
+  cp /opt/webconsole/bin/webconsole  /etc/init.d/   && chmod   755 /etc/init.d/webconsole 
   chkconfig   --add  webconsole  &&  chkconfig webconsole   on  && service webconsole   start
   
 
