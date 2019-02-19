@@ -10,8 +10,8 @@ import (
 	"time"
 	"unicode/utf8"
 
-	"apibox.club/utils"
 	"github.com/gorilla/websocket"
+	"github.com/soopsio/webconsole/utils"
 	gossh "golang.org/x/crypto/ssh"
 )
 
@@ -32,6 +32,9 @@ func (s *ssh) Connect() (*ssh, error) {
 	config.SetDefaults()
 	config.User = s.user
 	config.Auth = []gossh.AuthMethod{gossh.Password(s.pwd)}
+	config.HostKeyCallback = func(hostname string, remote net.Addr, key gossh.PublicKey) error {
+		return nil
+	}
 	client, err := gossh.Dial("tcp", s.addr, config)
 	if nil != err {
 		return nil, err
@@ -388,7 +391,7 @@ func (c *Console) ConsoleLogin(w http.ResponseWriter, r *http.Request) {
 		sh, err = sh.Connect()
 		if nil != err {
 			result.Ok = false
-			result.Msg = "无法连接到远端主机，请确认远端主机已开机且保证口令的正确性。"
+			result.Msg = "无法连接到远端主机，请确认远端主机已开机且保证口令的正确性。" + err.Error()
 		} else {
 			_, err := sh.Exec("true")
 			if nil != err {

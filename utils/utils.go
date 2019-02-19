@@ -28,6 +28,7 @@ import (
 	"golang.org/x/text/transform"
 	"io"
 	"io/ioutil"
+	"log"
 	"mime"
 	"net/http"
 	"net/url"
@@ -423,8 +424,8 @@ func GetCharset(charset string) encoding.Encoding {
 		return unicode.UTF16(unicode.BigEndian, unicode.IgnoreBOM)
 	case "UTF16-LE", "UTF-16-LE":
 		return unicode.UTF16(unicode.LittleEndian, unicode.IgnoreBOM)
-	//case "UTF32", "UTF-32":
-	//	return simplifiedchinese.GBK
+		//case "UTF32", "UTF-32":
+		//	return simplifiedchinese.GBK
 	default:
 		return nil
 	}
@@ -698,6 +699,7 @@ func Gzip_Binary(b []byte, w http.ResponseWriter, r *http.Request) {
 }
 
 func Get_Conf() (*Conf, error) {
+	log.Println("ConfPath:", ConfPath)
 	b, err := ioutil.ReadFile(ConfPath)
 	if nil != err {
 		return nil, err

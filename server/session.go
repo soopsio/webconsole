@@ -1,7 +1,7 @@
 package server
 
 import (
-	"apibox.club/utils"
+	"github.com/soopsio/webconsole/utils"
 	"container/list"
 	"net/http"
 	"net/url"

@@ -9,7 +9,7 @@
 3、echo 'export PATH="/usr/local/go/bin:$PATH"' >> /etc/profile
 4、source /etc/profile
 5、cd /opt && git clone --recurse-submodules https://github.com/shibingli/webconsole.git && cd webconsole && git submodule update --init --recursive
-6、cd /opt/webconsole/src/apibox.club/apibox
+6、cd /opt/webconsole/src/github.com/soopsio/webconsole/apibox
 7、GOPATH=/opt/webconsole go install
 8、设置开机自动启动
   cp /opt/webconsole/bin/webconsole  /etc/init.d/   && chmod   755 /etc/init.d/webconsole 
@@ -26,7 +26,7 @@
 ```
 1、下载并安装 Docker
 2、cd /opt && git clone --recurse-submodules https://github.com/shibingli/webconsole.git && cd webconsole && git submodule update --init --recursive
-3、cd /opt/webconsole/src/apibox.club/apibox
+3、cd /opt/webconsole/src/github.com/soopsio/webconsole/apibox
 4、GOPATH=/opt/webconsole go install
 5、cd /opt/webconsole
 6、docker build -t webconsole:latest .

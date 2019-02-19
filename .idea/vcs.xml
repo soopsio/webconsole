@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="VcsDirectoryMappings">
+    <mapping directory="$PROJECT_DIR$" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/src/github.com/go-sql-driver/mysql" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/src/github.com/gorilla/websocket" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/src/golang.org/x/build" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/src/golang.org/x/crypto" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/src/golang.org/x/image" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/src/golang.org/x/net" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/src/golang.org/x/oauth2" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/src/golang.org/x/text" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/src/golang.org/x/tools" vcs="Git" />
+  </component>
+</project>

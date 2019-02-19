@@ -11,8 +11,8 @@ import (
 	"strings"
 	"text/template"
 
-	"apibox.club/server"
-	"apibox.club/utils"
+	"github.com/soopsio/webconsole/server"
+	"github.com/soopsio/webconsole/utils"
 )
 
 var (

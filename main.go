@@ -4,14 +4,14 @@ import (
 	"bytes"
 	"flag"
 	"fmt"
+	"github.com/soopsio/webconsole/utils"
 	"io/ioutil"
 	"os"
 	"strings"
 	"syscall"
 	"time"
 
-	"apibox.club/utils"
-	"apibox.club/website"
+	"github.com/soopsio/webconsole/website"
 )
 
 const (
